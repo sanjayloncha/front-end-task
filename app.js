@@ -4,22 +4,11 @@ const { useState } = React;
 
 function TableData() {
   const [data, setData] = useState([
-    [
-      "Technical Audit",
-      "Website Access",
-      "Google Search Console Access",
-    ],
-    [
-      "Onboardng Call",
-      "Google Analytics Access",
-      "On Page Optimization",
-    ],
-    [
-      "Competitor Analysis",
-      "Premium Press Release",
-      "Site Level Optimization",
-    ]
+    ["Technical Audit", "Website Access", "Google Search Console Access"],
+    ["Onboardng Call", "Google Analytics Access", "On Page Optimization"],
+    ["Competitor Analysis", "Premium Press Release", "Site Level Optimization"],
   ]);
+
 
   const [month, setMonth] = useState([
     {
@@ -33,12 +22,13 @@ function TableData() {
     },
   ]);
 
-
-  function handleEdit(index, column, value) {
-    const newRows = [...state];
-    newRows[index][column] = value;
-    setState(newRows);
-  }
+  let edit = (row,col,value) => {
+    let newArr = [...data] ;
+    newArr[col][row] = value ;
+    // instead of "alert" we can write logic for posting data from here as we will be getting the updated data after editing so we can successfully post the data.
+    alert("data ready to post") ;
+    setData(newArr) ; 
+  };
 
   return (
     <>
@@ -46,26 +36,27 @@ function TableData() {
         <div className="table_heading">
           {month.map((item) => {
             return (
-              <div >
+              <div>
                 <h2>{item.MONTH}</h2>
               </div>
             );
           })}
         </div>
         <div className="table_row">
-        {data.map((elem,index) => {
+          {data.map((elem, col) => {
             return (
-                <div key={index} className="table_row_data">
-              {
-                  elem.map((item,index)=>{
-                    return (
-                        <p key={index} >{item}</p>
-                    )
-                })
-              }
-            </div>
-          );
-        })}
+              <div key={col} className="table_row_data">
+                {elem.map((item, row) => {
+                  return (
+                    <EditableCell
+                      value={item}
+                      onEdit={(value) => edit(row,col,value)}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
       </div>
     </>
@@ -84,13 +75,12 @@ function EditableCell({ value, onEdit }) {
     setEditing(false);
     onEdit(inputValue);
   }
-
   function handleChange(event) {
     setInputValue(event.target.value);
   }
 
   return (
-    <td>
+    <div className="para_btn">
       {editing ? (
         <>
           <input type="text" value={inputValue} onChange={handleChange} />
@@ -102,7 +92,7 @@ function EditableCell({ value, onEdit }) {
           <button onClick={handleEdit}>Edit</button>
         </>
       )}
-    </td>
+    </div>
   );
 }
 
